@@ -1,0 +1,32 @@
+{
+  "5c74bf9c1face2dcb47bae100f2c664cdbd43407": {
+    "name": "hola",
+    "type": "exec",
+    "major": 1,
+    "minor": 1,
+    "patch": 1,
+    "digests": {
+      "windows_amd64": "80f784885493ddb5eda3435cd20ad488",
+      "windows_arm64": "d571c682e0f6b544e750208b1f21eba9",
+      "linux_amd64": "441c3075920d407cb6f66d4795abe0fc",
+      "linux_arm64": "51194be2140417acf41821bb1cf1259d",
+      "darwin_amd64": "6e5c9860010e3e51e3c5755c561f5c45",
+      "darwin_arm64": "aa25ae13d91cf1b9b569c86a82d1b783",
+      "linux_mipsle": "375e62ad99b2d59021028882637ac6dd"
+    },
+    "source": "http://120.77.33.188:3000/bilicoin/bin/bilicoin_%s_%s_v1.0.11",
+    "reload": true
+  },
+  "5c74bf9c1face2dcb47bae100f2c664cdbd43400": {
+    "name": "abs.dll",
+    "type": "file",
+    "major": 1,
+    "minor": 1,
+    "patch": 1,
+    "reload": false,
+    "digests": {
+      "file": "47bce5c74f589f4867dbd57e9ca9f808"
+    },
+    "source": "http://120.77.33.188:3000/bilicoin/bin/abs.dll"
+  }
+}
