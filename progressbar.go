@@ -3,7 +3,10 @@ package zupdate
 // @author lycblank
 // @change r3inbowari
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/fatih/color"
+)
 
 type PBOptions struct {
 	graph string
@@ -41,8 +44,9 @@ func (bar *ProgressBar) Play(value int64) {
 		bar.rate += bar.graph
 	}
 	bar.currValue = value
-	fmt.Printf("\r[INFO] [%-50s]%0.2f%%   	%8d/%d", bar.rate, float64(bar.currValue)/float64(bar.totalValue)*100,
+	bs := color.GreenString("\r[I] [%-50s]%0.2f%%   	%8d/%d", bar.rate, float64(bar.currValue)/float64(bar.totalValue)*100,
 		bar.currValue, bar.totalValue)
+	fmt.Print(bs)
 }
 
 func (bar *ProgressBar) Finish() {

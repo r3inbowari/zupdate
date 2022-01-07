@@ -30,12 +30,12 @@ type Update struct {
 	remoteFile map[string]File
 	pending    []File
 	sync.RWMutex
-	Option
+	UpdateOptions
 	batch Batch
 }
 
-type Option struct {
-	Name        string
+type UpdateOptions struct {
+	EntryName   string
 	Mode        Mode
 	Log         *logrus.Logger
 	CheckSource string
@@ -49,16 +49,18 @@ func (up *Update) IncludeFile(id string, f File) {
 	up.file[id] = f
 }
 
-func InitUpdater(opt Option, callback func()) *Update {
+func InitUpdater(opt UpdateOptions) *Update {
 	if runtime.GOOS == "windows" {
-		_ = os.Remove("./install.bat")
+		_ = os.Remove(".install.bat")
 	}
 	var update Update
-	update.Option = opt
-	update.Callback = callback
+	update.UpdateOptions = opt
 	update.file = make(map[string]File)
 	if opt.Log == nil {
 		update.Log = logrus.New()
+	}
+	if opt.CheckSource == "" {
+		update.Log.Warn("update check source not set")
 	}
 	return &update
 }
@@ -99,7 +101,7 @@ func (up *Update) Update(file *File) (bool, error) {
 		// we can rename the all file with open with other process on linux/unix
 		err := os.Rename(file.Name+"_tmp", file.Name)
 		if err != nil {
-			up.Log.WithFields(logrus.Fields{"name": up.Name, "err": err.Error()}).Error("[UP] file rename failed")
+			up.Log.WithFields(logrus.Fields{"name": file.Name, "err": err.Error()}).Error("[UP] file rename failed")
 			return false, err
 		}
 	} else if runtime.GOOS == "windows" && !file.Reload {
@@ -112,7 +114,7 @@ func (up *Update) Update(file *File) (bool, error) {
 	} else if runtime.GOOS == "windows" && file.Reload {
 		// we try to rename excluded file on batch when using windows,
 		// but this process must be defined already on batch
-		up.batch.Add(up.Name)
+		up.batch.Add(file.Name)
 	}
 	return file.Reload, err
 }
@@ -138,7 +140,7 @@ func (up *Update) Check() {
 func (up *Update) CheckAndUpdate() {
 	needReload := false
 	up.Check()
-	up.batch = NewBatch(".install")
+	up.batch = NewBatch(".install.bat")
 	for _, file := range up.pending {
 		nReload, err := up.Update(&file)
 		if err != nil {
@@ -165,11 +167,11 @@ func (up *Update) Reload() {
 	}
 	if systemType == "linux" || systemType == "darwin" {
 		// release current app resource.
-		_ = reload(up.Name, up.EntryArgs...)
+		_ = reload(up.EntryName, up.EntryArgs...)
 		time.Sleep(time.Second)
 		os.Exit(1010)
 	} else if systemType == "windows" {
-		up.batch.Entry(up.Name, up.Name, up.EntryArgs...)
+		up.batch.Entry(up.EntryName, up.EntryArgs...)
 		// it will kill current process,
 		// release resource is no need.
 		_ = up.batch.Exec()
