@@ -14,7 +14,7 @@ type Batch struct {
 	name string
 }
 
-func NewBatch(name string) Batch {
+func NewBatch(name string) *Batch {
 	var retBat Batch
 	var err error
 	retBat.name = name
@@ -25,7 +25,7 @@ func NewBatch(name string) Batch {
 	}
 	retBat.w = bufio.NewWriter(retBat.file)
 	retBat.w.WriteString(fmt.Sprintf("taskkill /f /pid %d\n", os.Getpid()))
-	return retBat
+	return &retBat
 }
 
 func (bat *Batch) Add(name string) {

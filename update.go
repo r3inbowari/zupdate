@@ -29,9 +29,9 @@ type Update struct {
 	file       map[string]File
 	remoteFile map[string]File
 	pending    []File
+	batch      *Batch
 	sync.RWMutex
 	UpdateOptions
-	batch Batch
 }
 
 type UpdateOptions struct {
@@ -140,7 +140,9 @@ func (up *Update) Check() {
 func (up *Update) CheckAndUpdate() {
 	needReload := false
 	up.Check()
-	up.batch = NewBatch(".install.bat")
+	if len(up.pending) > 0 {
+		up.batch = NewBatch(".install.bat")
+	}
 	for _, file := range up.pending {
 		nReload, err := up.Update(&file)
 		if err != nil {

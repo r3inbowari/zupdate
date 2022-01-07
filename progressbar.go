@@ -44,9 +44,13 @@ func (bar *ProgressBar) Play(value int64) {
 		bar.rate += bar.graph
 	}
 	bar.currValue = value
-	bs := color.GreenString("\r[I] [%-50s]%0.2f%%   	%8d/%d", bar.rate, float64(bar.currValue)/float64(bar.totalValue)*100,
-		bar.currValue, bar.totalValue)
-	fmt.Print(bs)
+
+	_, _ = color.New(color.FgGreen).Printf(
+		"\r[I] [%-50s]%0.2f%%   	%8d/%d",
+		bar.rate,
+		float64(bar.currValue)/float64(bar.totalValue)*100,
+		bar.currValue,
+		bar.totalValue)
 }
 
 func (bar *ProgressBar) Finish() {
@@ -56,9 +60,12 @@ func (bar *ProgressBar) Finish() {
 		bar.rate += bar.graph
 	}
 	bar.currValue = bar.totalValue
-	fmt.Printf("\r[INFO] [%-50s]%0.2f%%   	%8d/%d", bar.rate, float64(bar.currValue)/float64(bar.totalValue)*100,
-		bar.currValue, bar.totalValue)
-	fmt.Println()
+	_, _ = color.New(color.FgGreen).Printf(
+		"\r[I] [%-50s]%0.2f%%   	%8d/%d\n",
+		bar.rate,
+		float64(bar.currValue)/float64(bar.totalValue)*100,
+		bar.currValue,
+		bar.totalValue)
 }
 
 func (bar *ProgressBar) Stop() {
