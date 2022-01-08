@@ -158,8 +158,8 @@ func (up *Update) CheckAndUpdate() {
 	if needReload {
 		up.Reload()
 	}
-	if len(up.pending) > 0 {
-		_ = os.Remove(".install.bat")
+	if len(up.pending) > 0 && up.batch != nil {
+		up.batch.Remove()
 	}
 }
 

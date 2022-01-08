@@ -52,3 +52,10 @@ func (bat *Batch) Exec() error {
 func ExecByName(name string) error {
 	return exec.Command("cmd.exe", "/c", "start "+name).Start()
 }
+
+func (bat *Batch) Remove() {
+	if bat.file != nil {
+		_ = bat.file.Close()
+		_ = os.Remove(".install.bat")
+	}
+}
