@@ -120,6 +120,7 @@ func (up *Update) Update(file *File) (bool, error) {
 }
 
 func (up *Update) Check() {
+	up.pending = []File{}
 	err := up.pullUpdateList()
 	if err != nil {
 		return
@@ -156,6 +157,9 @@ func (up *Update) CheckAndUpdate() {
 	// finally
 	if needReload {
 		up.Reload()
+	}
+	if len(up.pending) > 0 {
+		_ = os.Remove(".install.bat")
 	}
 }
 
